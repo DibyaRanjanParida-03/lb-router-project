@@ -1,14 +1,14 @@
 #include "lb_router/NetlinkBridge.hpp"
+#include "lb_router/lb_netlink.h"
 #include <cstring>
-
-#define NETLINK_USER 31
+#include <stdexcept>
 
 namespace lb_router {
 
 NetlinkBridge::NetlinkBridge() : sock_fd(-1) {
     sock_fd = socket(PF_NETLINK, SOCK_RAW, NETLINK_USER);
     if (sock_fd < 0) {
-        throw std::runtime_error("Failed to create Netlink socket. Are you running as root?");
+        throw std::runtime_error("Failed to create Netlink socket.");
     }
 
     std::memset(&src_addr, 0, sizeof(src_addr));
@@ -29,14 +29,31 @@ NetlinkBridge::NetlinkBridge() : sock_fd(-1) {
 NetlinkBridge::~NetlinkBridge() {
     if (sock_fd >= 0) {
         close(sock_fd);
-        std::cout << "[NetlinkBridge] Socket closed safely via RAII.\n";
     }
 }
 
 bool NetlinkBridge::sendUpdate(uint32_t ip_address, bool is_healthy) {
-    std::cout << "[NetlinkBridge] Mock sending IP: " << ip_address 
-              << " Status: " << (is_healthy ? "ONLINE" : "OFFLINE") << "\n";
-    return true;
+    struct {
+        struct nlmsghdr nlh;
+        struct lb_cmd cmd;
+    } req;
+
+    std::memset(&req, 0, sizeof(req));
+    req.nlh.nlmsg_len = NLMSG_LENGTH(sizeof(struct lb_cmd));
+    req.nlh.nlmsg_pid = getpid();
+    req.nlh.nlmsg_flags = NLM_F_REQUEST;
+
+    req.cmd.ip_address = ip_address;
+    req.cmd.is_healthy = is_healthy ? 1 : 0;
+
+    struct iovec iov = { &req.nlh, req.nlh.nlmsg_len };
+    struct msghdr msg = {};
+    msg.msg_name = &dest_addr;
+    msg.msg_namelen = sizeof(dest_addr);
+    msg.msg_iov = &iov;
+    msg.msg_iovlen = 1;
+
+    return sendmsg(sock_fd, &msg, 0) >= 0;
 }
 
 }

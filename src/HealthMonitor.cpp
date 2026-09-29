@@ -3,6 +3,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <map>
 
 namespace lb_router {
 
@@ -21,6 +22,8 @@ HealthMonitor::~HealthMonitor() {
 
 void HealthMonitor::run() {
     while (keep_running) {
+        std::map<int, uint32_t> fd_to_ip;
+        
         for (const auto& ip : backend_ips) {
             int sock = socket(AF_INET, SOCK_STREAM, 0);
             fcntl(sock, F_SETFL, O_NONBLOCK);
@@ -31,6 +34,7 @@ void HealthMonitor::run() {
             inet_pton(AF_INET, ip.c_str(), &addr.sin_addr);
 
             connect(sock, (struct sockaddr*)&addr, sizeof(addr));
+            fd_to_ip[sock] = addr.sin_addr.s_addr;
 
             epoll_event ev{};
             ev.events = EPOLLOUT;
@@ -47,7 +51,7 @@ void HealthMonitor::run() {
             socklen_t len = sizeof(error);
             getsockopt(fd, SOL_SOCKET, SO_ERROR, &error, &len);
 
-            bridge.sendUpdate(0, (error == 0)); 
+            bridge.sendUpdate(fd_to_ip[fd], (error == 0)); 
             
             epoll_ctl(epoll_fd, EPOLL_CTL_DEL, fd, nullptr);
             close(fd);
