@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <cstdint>
 #include <sys/socket.h>
 #include <linux/netlink.h>
 #include <unistd.h>
