@@ -53,3 +53,15 @@ In this final architectural stage, the user-space and kernel-space components we
 * **Shared IPC Protocol:** Introduced `lb_netlink.h` to enforce a strict memory layout for messages passed across the user/kernel boundary.
 * **C++ Control Plane:** Upgraded the `NetlinkBridge` to serialize dynamically discovered healthy IP addresses into proper Netlink Message Headers (`nlmsghdr`) and push them to the kernel.
 * **Kernel Data Plane:** Implemented a Netlink socket listener (`netlink_kernel_create`). The kernel module now actively listens for health updates and instantly swaps the `target_ip` used for DNAT routing, entirely eliminating hardcoded destinations.
+
+## Project Conclusion
+This project successfully demonstrates a high-performance, hybrid-architecture load balancer. By splitting responsibilities across the operating system privilege boundary, the system achieves the best of both worlds:
+
+1. **Data Plane Performance:** Packet interception and IP rewriting (DNAT) occur strictly in kernel space (Ring 0) using Netfilter, eliminating costly context switches and maximizing throughput.
+2. **Control Plane Safety:** Complex business logic, asynchronous connection handling (`epoll`), and resource management (RAII) are handled safely in user space using modern C++20.
+3. **Seamless IPC:** Real-time synchronization is maintained through lightweight Netlink sockets, allowing the routing table to adapt dynamically to backend health states.
+
+**Future Enhancements:**
+* Implementation of advanced load-balancing algorithms (e.g., Weighted Round-Robin, Least Connections).
+* Expanding protocol support beyond TCP (e.g., UDP).
+* Migrating the kernel module logic to eBPF/XDP for even lower latency packet processing.
