@@ -40,3 +40,9 @@ In this stage, the core skeletons for both the user-space and kernel-space compo
 * **C++ Daemon:** `mkdir build && cd build && cmake .. && make`
 * **Kernel Driver:** `cd kernel_driver && make`
 * **Execution:** Insert the module with `sudo insmod lb_interceptor.ko`, then run the daemon with `sudo ./lb_daemon`.
+
+## Stage 5: Asynchronous Health Checks & Kernel DNAT
+In this stage, the core functional logic of the load balancer was fully realized.
+
+* **C++ Control Plane:** Upgraded to use non-blocking asynchronous I/O (`epoll`) via the `HealthMonitor` class, allowing the daemon to simultaneously track the health of multiple backend servers without blocking threads.
+* **Kernel Data Plane:** Implemented Destination Network Address Translation (DNAT). The Netfilter hook now safely makes the `sk_buff` writable, rewrites the destination IP for HTTP traffic (port 80), and strictly recalculates both the IP and TCP checksums to ensure packets are accepted by the target backend.
