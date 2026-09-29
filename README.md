@@ -46,3 +46,10 @@ In this stage, the core functional logic of the load balancer was fully realized
 
 * **C++ Control Plane:** Upgraded to use non-blocking asynchronous I/O (`epoll`) via the `HealthMonitor` class, allowing the daemon to simultaneously track the health of multiple backend servers without blocking threads.
 * **Kernel Data Plane:** Implemented Destination Network Address Translation (DNAT). The Netfilter hook now safely makes the `sk_buff` writable, rewrites the destination IP for HTTP traffic (port 80), and strictly recalculates both the IP and TCP checksums to ensure packets are accepted by the target backend.
+
+## Stage 6: Netlink IPC Integration
+In this final architectural stage, the user-space and kernel-space components were bridged, allowing real-time, dynamic routing updates.
+
+* **Shared IPC Protocol:** Introduced `lb_netlink.h` to enforce a strict memory layout for messages passed across the user/kernel boundary.
+* **C++ Control Plane:** Upgraded the `NetlinkBridge` to serialize dynamically discovered healthy IP addresses into proper Netlink Message Headers (`nlmsghdr`) and push them to the kernel.
+* **Kernel Data Plane:** Implemented a Netlink socket listener (`netlink_kernel_create`). The kernel module now actively listens for health updates and instantly swaps the `target_ip` used for DNAT routing, entirely eliminating hardcoded destinations.
