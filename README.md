@@ -25,9 +25,3 @@ In this stage, the functional and non-functional requirements were established, 
 2. **C++ Control Plane:** Development of the C++20 daemon and asynchronous TCP health checkers.
 3. **Kernel Data Plane:** Implementation of the Netfilter kernel module for packet interception and DNAT.
 4. **Integration & Delivery:** Bridging user and kernel space via Netlink, stress testing, and final presentation.
-
-## Stage 3: System Design & Architecture
-The system architecture and component interactions are documented using Mermaid.js UML:
-* [C++ Class Diagram](lb-router-project/diagrams/ClassDiagram.md)
-* [Packet Flow Sequence Diagram](lb-router-project/diagrams/SequenceDiagram.md)
-* [Backend State Machine Diagram](lb-router-project/diagrams/StateDiagram.md)
