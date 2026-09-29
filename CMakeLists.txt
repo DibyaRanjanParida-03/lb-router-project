@@ -11,6 +11,7 @@ include_directories(include)
 add_executable(lb_daemon 
     src/main.cpp 
     src/NetlinkBridge.cpp
+    src/HealthMonitor.cpp
 )
 
 target_link_libraries(lb_daemon Threads::Threads)
