@@ -1,0 +1,27 @@
+# C++ CMake artifacts
+build/
+bin/
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+compile_commands.json
+
+# Linux Kernel Module artifacts
+*.o
+*.ko
+*.mod
+*.mod.c
+*.mod.o
+modules.order
+Module.symvers
+.tmp_versions/
+.*.cmd
+*.symvers
+*.d
+
+# IDE / OS files
+.vscode/
+.idea/
+*.swp
+.DS_Store
