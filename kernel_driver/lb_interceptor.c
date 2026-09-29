@@ -20,7 +20,6 @@ unsigned int lb_hook_func(void *priv, struct sk_buff *skb, const struct nf_hook_
         tcph = tcp_hdr(skb);
         if (!tcph) return NF_ACCEPT;
 
-        // Prototype: Log TCP packets destined for port 80 (HTTP)
         if (ntohs(tcph->dest) == 80) {
             printk(KERN_INFO "[LB Data Plane] Intercepted HTTP packet from %pI4\n", &iph->saddr);
         }

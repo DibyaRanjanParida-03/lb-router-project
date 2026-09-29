@@ -30,3 +30,13 @@ The system architecture and component interactions are documented using Mermaid.
 * [C++ Class Diagram](lb-router-project/diagrams/ClassDiagram.md)
 * [Packet Flow Sequence Diagram](lb-router-project/diagrams/SequenceDiagram.md)
 * [Backend State Machine Diagram](lb-router-project/diagrams/StateDiagram.md)
+## Stage 4: Initial Implementation & Prototype
+In this stage, the core skeletons for both the user-space and kernel-space components were implemented and successfully tested.
+
+* **C++ Control Plane:** A modern C++20 daemon featuring graceful shutdown handling (`SIGINT`/`SIGTERM`) and an RAII-compliant `NetlinkBridge` class to manage raw socket communication safely without memory leaks.
+* **Kernel Data Plane:** A basic loadable kernel module (`lb_interceptor.ko`) utilizing the `NF_INET_PRE_ROUTING` hook to intercept HTTP TCP traffic and log packet details.
+
+**Build and Run Instructions:**
+* **C++ Daemon:** `mkdir build && cd build && cmake .. && make`
+* **Kernel Driver:** `cd kernel_driver && make`
+* **Execution:** Insert the module with `sudo insmod lb_interceptor.ko`, then run the daemon with `sudo ./lb_daemon`.

@@ -13,7 +13,7 @@ NetlinkBridge::NetlinkBridge() : sock_fd(-1) {
 
     std::memset(&src_addr, 0, sizeof(src_addr));
     src_addr.nl_family = AF_NETLINK;
-    src_addr.nl_pid = getpid(); // C++ daemon process ID
+    src_addr.nl_pid = getpid(); 
 
     if (bind(sock_fd, reinterpret_cast<struct sockaddr*>(&src_addr), sizeof(src_addr)) < 0) {
         close(sock_fd);
@@ -22,8 +22,8 @@ NetlinkBridge::NetlinkBridge() : sock_fd(-1) {
 
     std::memset(&dest_addr, 0, sizeof(dest_addr));
     dest_addr.nl_family = AF_NETLINK;
-    dest_addr.nl_pid = 0; // 0 means Linux Kernel
-    dest_addr.nl_groups = 0; // Unicast
+    dest_addr.nl_pid = 0; 
+    dest_addr.nl_groups = 0; 
 }
 
 NetlinkBridge::~NetlinkBridge() {
@@ -34,11 +34,9 @@ NetlinkBridge::~NetlinkBridge() {
 }
 
 bool NetlinkBridge::sendUpdate(uint32_t ip_address, bool is_healthy) {
-    // We will implement the actual message construction in Stage 5.
-    // For the prototype, we just prove the class works.
     std::cout << "[NetlinkBridge] Mock sending IP: " << ip_address 
               << " Status: " << (is_healthy ? "ONLINE" : "OFFLINE") << "\n";
     return true;
 }
 
-} // namespace lb_router
+}

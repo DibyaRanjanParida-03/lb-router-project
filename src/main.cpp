@@ -21,10 +21,8 @@ int main() {
     try {
         lb_router::NetlinkBridge kernel_bridge;
         
-        // Prototype Loop
         while (keep_running) {
-            // Mocking a health check update
-            kernel_bridge.sendUpdate(0xC0A8010A, true); // 192.168.1.10
+            kernel_bridge.sendUpdate(0xC0A8010A, true); 
             std::this_thread::sleep_for(std::chrono::seconds(3));
         }
     } catch (const std::exception& e) {
