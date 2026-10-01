@@ -1,3 +1,13 @@
+# Software-Defined Hybrid Load Balancer
+
+## Project Introduction
+This project is a high-performance, dual-plane load balancer that combines the flexibility of user-space applications with the raw speed of kernel-space packet processing. 
+
+By separating the architecture, it achieves optimal performance:
+* **Control Plane (C++20):** Manages asynchronous backend health monitoring (`epoll`) and safe resource management (RAII) outside the kernel.
+* **Data Plane (C/Netfilter):** Intercepts and rewrites packets (DNAT) directly in Ring 0, avoiding expensive context switches.
+* **IPC (Netlink):** Bridges the two planes, allowing the C++ daemon to dynamically update kernel routing tables in real time.
+
 # Software-Defined Load Balancer & Health-Check Router
 
 ## Stage 1: Project Introduction
