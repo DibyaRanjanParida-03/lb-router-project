@@ -31,6 +31,34 @@ The system architecture and component interactions are documented using Mermaid.
 * [C++ Class Diagram](lb-router-project/diagrams/ClassDiagram.md)
 * [Packet Flow Sequence Diagram](lb-router-project/diagrams/SequenceDiagram.md)
 * [Backend State Machine Diagram](lb-router-project/diagrams/StateDiagram.md)
+=======================================================================
+                   HYBRID LOAD BALANCER ARCHITECTURE
+=======================================================================
+
+[ Incoming Client Traffic ]
+           |
+           v
++---------------------------------------------------------+
+|                      KERNEL SPACE                       |
+|                                                         |
+|  [ Netfilter Hook ] =====> [ DNAT Routing Engine ]      |
+|  (Intercepts TCP/UDP)      (Rewrites Destination IP)    |
++----------^----------------------------------------------+
+           |
+           | Netlink Sockets (IPC)
+           | "Pushing healthy IPs to the Kernel"
+           v
++---------------------------------------------------------+
+|                       USER SPACE                        |
+|                                                         |
+|  [ NetlinkBridge ] <====== [ C++ HealthMonitor ]        |
+|  (Talks to Kernel)         (epoll Async Health Checks)  |
++---------------------------------------|-----------------+
+                                        | (HTTP / TCP Probes)
+                                        v
+                             [ Backend Web Servers ]
+                          (192.168.1.10, 192.168.1.11)
+
 ## Stage 4: Initial Implementation & Prototype
 In this stage, the core skeletons for both the user-space and kernel-space components were implemented and successfully tested.
 
