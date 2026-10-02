@@ -4,9 +4,9 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <map>
-#include <iostream>  // Required for std::cout logging
-#include <chrono>    // Required for std::chrono::seconds
-#include <thread>    // Required for std::this_thread
+#include <iostream>
+#include <chrono>
+#include <thread>
 
 namespace lb_router {
 
@@ -56,7 +56,6 @@ void HealthMonitor::run() {
 
             bool is_healthy = (error == 0);
             
-            // Visual logging so you can see the results in the terminal
             struct in_addr ip_addr;
             ip_addr.s_addr = fd_to_ip[fd];
             std::cout << "[Control Plane] IP: " << inet_ntoa(ip_addr) 
