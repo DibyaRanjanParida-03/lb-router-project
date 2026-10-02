@@ -4,6 +4,9 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <map>
+#include <iostream>  // Required for std::cout logging
+#include <chrono>    // Required for std::chrono::seconds
+#include <thread>    // Required for std::this_thread
 
 namespace lb_router {
 
@@ -51,7 +54,16 @@ void HealthMonitor::run() {
             socklen_t len = sizeof(error);
             getsockopt(fd, SOL_SOCKET, SO_ERROR, &error, &len);
 
-            bridge.sendUpdate(fd_to_ip[fd], (error == 0)); 
+            bool is_healthy = (error == 0);
+            
+            // Visual logging so you can see the results in the terminal
+            struct in_addr ip_addr;
+            ip_addr.s_addr = fd_to_ip[fd];
+            std::cout << "[Control Plane] IP: " << inet_ntoa(ip_addr) 
+                      << " is " << (is_healthy ? "ONLINE" : "OFFLINE") 
+                      << " -> Updating Kernel Routing Table via Netlink.\n";
+
+            bridge.sendUpdate(fd_to_ip[fd], is_healthy); 
             
             epoll_ctl(epoll_fd, EPOLL_CTL_DEL, fd, nullptr);
             close(fd);
