@@ -1,29 +1,13 @@
 #pragma once
-
-#include <iostream>
-#include <string>
-#include <vector>
-#include <cstdint>
-#include <sys/socket.h>
-#include <linux/netlink.h>
-#include <unistd.h>
+#include <stdint.h>
 
 namespace lb_router {
-
-class NetlinkBridge {
-private:
-    int sock_fd;
-    sockaddr_nl src_addr;
-    sockaddr_nl dest_addr;
-
-public:
-    NetlinkBridge();
-    ~NetlinkBridge();
-    
-    NetlinkBridge(const NetlinkBridge&) = delete;
-    NetlinkBridge& operator=(const NetlinkBridge&) = delete;
-
-    bool sendUpdate(uint32_t ip_address, bool is_healthy);
-};
-
+    class NetlinkBridge {
+    private:
+        int sock_fd;
+    public:
+        NetlinkBridge();
+        ~NetlinkBridge();
+        bool sendUpdate(uint32_t ip_address, bool is_healthy);
+    };
 }
