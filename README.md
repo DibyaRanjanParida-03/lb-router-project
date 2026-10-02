@@ -31,6 +31,8 @@ The system architecture and component interactions are documented using Mermaid.
 * [C++ Class Diagram](lb-router-project/diagrams/ClassDiagram.md)
 * [Packet Flow Sequence Diagram](lb-router-project/diagrams/SequenceDiagram.md)
 * [Backend State Machine Diagram](lb-router-project/diagrams/StateDiagram.md)
+
+
 =======================================================================
                    HYBRID LOAD BALANCER ARCHITECTURE
 =======================================================================
@@ -58,6 +60,8 @@ The system architecture and component interactions are documented using Mermaid.
                                         v
                              [ Backend Web Servers ]
                           (192.168.1.10, 192.168.1.11)
+
+
 
 ## Stage 4: Initial Implementation & Prototype
 In this stage, the core skeletons for both the user-space and kernel-space components were implemented and successfully tested.
