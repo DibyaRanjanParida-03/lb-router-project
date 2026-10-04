@@ -19,13 +19,41 @@ This project eliminates context-switching bottlenecks by pushing packet-forwardi
 ## Stage 2: Requirements & Development Plan
 In this stage, the functional and non-functional requirements were established, mapping out the strict separation of concerns between user-space memory safety and kernel-space performance.
 
-* [Product Requirements Document (PRD)](lb-router-project/PRD.md)
+### Product Requirements Document (PRD)
+**Project:** Software-Defined Load Balancer & Health-Check Router
+
+#### 1. System Overview
+A high-throughput, dual-plane Layer 4 load balancer. The data plane resides in the Linux Kernel to process packets at line rate, while the control plane runs as a user-space C++20 daemon to handle routing logic and health monitoring.
+
+#### 2. Functional Requirements
+**Kernel Data Plane (Netfilter):**
+* Must intercept incoming TCP packets using `NF_INET_PRE_ROUTING`.
+* Must perform Destination Network Address Translation (DNAT) to route packets to backend IPs.
+* Must dynamically receive and parse routing table updates via Netlink sockets.
+
+**C++ Control Plane (Daemon):**
+* Must actively probe backend server health via asynchronous TCP socket connections (using `epoll` or standard C++ threads).
+* Must identify when a node goes offline and dynamically update the kernel routing table.
+* Must serialize routing commands and communicate securely with the kernel via Netlink.
+
+#### 3. Non-Functional Requirements
+* **Performance:** Minimal packet processing latency; no kernel-to-user-space copying of payload data.
+* **Memory Safety:** The user-space daemon must strictly utilize modern C++ (RAII, smart pointers) to guarantee zero memory leaks. Legacy C memory management is forbidden in user-space.
+* **Kernel Stability:** The driver must utilize safe spinlocks for routing table modifications to prevent kernel panics.
+
+#### 4. Deliverables
+* C++20 Control Daemon Source Code.
+* Linux Kernel Module (`.ko`) Source Code.
+* UML Architecture Diagrams.
+* Comprehensive Test Suite (GTest).
 
 **Development Process:**
 1. **Architecture Formulation:** Component design, UML modeling, and IPC boundaries.
 2. **C++ Control Plane:** Development of the C++20 daemon and asynchronous TCP health checkers.
 3. **Kernel Data Plane:** Implementation of the Netfilter kernel module for packet interception and DNAT.
 4. **Integration & Delivery:** Bridging user and kernel space via Netlink, stress testing, and final presentation.
+
+
 ## Stage 3: System Design & Architecture
 The system architecture and component interactions are documented using Mermaid.js UML:
 * [C++ Class Diagram](lb-router-project/diagrams/ClassDiagram.md)
