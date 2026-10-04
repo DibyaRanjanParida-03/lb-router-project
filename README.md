@@ -88,8 +88,7 @@ g++ -std=c++20 -I./include src/main.cpp src/NetlinkBridge.cpp src/HealthMonitor.
 sudo ./lb_daemon
 
 **Live Output:**
-![Load Balancer Output]
-C:\Users\USER\OneDrive\Pictures\Screenshots\Screenshot 2026-10-04 191828.png
+![Load Balancer Output](Screenshot%202026-10-04%20191828_2.png)
 
 
 ## Project Conclusion
