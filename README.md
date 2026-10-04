@@ -78,6 +78,20 @@ In this final architectural stage, the user-space and kernel-space components we
 * **C++ Control Plane:** Upgraded the `NetlinkBridge` to serialize dynamically discovered healthy IP addresses into proper Netlink Message Headers (`nlmsghdr`) and push them to the kernel.
 * **Kernel Data Plane:** Implemented a Netlink socket listener (`netlink_kernel_create`). The kernel module now actively listens for health updates and instantly swaps the `target_ip` used for DNAT routing, entirely eliminating hardcoded destinations.
 
+## Execution Commands & Output
+
+**1. Compile the Control Plane:**
+
+g++ -std=c++20 -I./include src/main.cpp src/NetlinkBridge.cpp src/HealthMonitor.cpp -o lb_daemon -pthread
+
+**2. Run the Daemon:**
+sudo ./lb_daemon
+
+**Live Output:**
+![Load Balancer Output](Screenshot%202026-10-04%20191828_2.png)
+
+
+
 ## Project Conclusion
 This project successfully demonstrates a high-performance, hybrid-architecture load balancer. By splitting responsibilities across the operating system privilege boundary, the system achieves the best of both worlds:
 
