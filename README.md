@@ -33,7 +33,7 @@ The system architecture and component interactions are documented using Mermaid.
 * [Backend State Machine Diagram](lb-router-project/diagrams/StateDiagram.md)
 
 
-
+```text
 +-----------------------+           +------------------------+
 |     CONTROL PLANE     |           |       DATA PLANE       |
 |     (User Space)      |           |     (Kernel Space)     |
@@ -49,7 +49,7 @@ The system architecture and component interactions are documented using Mermaid.
 |                   BACKEND WEB SERVERS                      |
 |             (192.168.1.10, 192.168.1.11)                   |
 +------------------------------------------------------------+
-
+```
 
 
 
