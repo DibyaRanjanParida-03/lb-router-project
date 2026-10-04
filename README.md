@@ -33,33 +33,24 @@ The system architecture and component interactions are documented using Mermaid.
 * [Backend State Machine Diagram](lb-router-project/diagrams/StateDiagram.md)
 
 
-=======================================================================
-                   HYBRID LOAD BALANCER ARCHITECTURE
-=======================================================================
 
-[ Incoming Client Traffic ]
-           |
-           v
-+---------------------------------------------------------+
-|                      KERNEL SPACE                       |
-|                                                         |
-|  [ Netfilter Hook ] =====> [ DNAT Routing Engine ]      |
-|  (Intercepts TCP/UDP)      (Rewrites Destination IP)    |
-+----------^----------------------------------------------+
-           |
-           | Netlink Sockets (IPC)
-           | "Pushing healthy IPs to the Kernel"
-           v
-+---------------------------------------------------------+
-|                       USER SPACE                        |
-|                                                         |
-|  [ NetlinkBridge ] <====== [ C++ HealthMonitor ]        |
-|  (Talks to Kernel)         (epoll Async Health Checks)  |
-+---------------------------------------|-----------------+
-                                        | (HTTP / TCP Probes)
-                                        v
-                             [ Backend Web Servers ]
-                          (192.168.1.10, 192.168.1.11)
++-----------------------+           +------------------------+
+|     CONTROL PLANE     |           |       DATA PLANE       |
+|     (User Space)      |           |     (Kernel Space)     |
+|                       |  Netlink  |                        |
+|  [ C++ Daemon ]       |==========>|  [ Netfilter Module ]  |
+|  - Async epoll checks |   (IPC)   |  - Intercepts Traffic  |
+|  - Tracks Server IPs  |           |  - Rewrites IPs (DNAT) |
++----------+------------+           +-----------+------------+
+           |                                    |
+           | HTTP Probes                        | TCP/UDP Traffic
+           v                                    v
++------------------------------------------------------------+
+|                   BACKEND WEB SERVERS                      |
+|             (192.168.1.10, 192.168.1.11)                   |
++------------------------------------------------------------+
+
+
 
 
 
