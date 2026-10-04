@@ -88,7 +88,7 @@ g++ -std=c++20 -I./include src/main.cpp src/NetlinkBridge.cpp src/HealthMonitor.
 sudo ./lb_daemon
 
 **Live Output:**
-![Load Balancer Output](Screenshot%202026-10-04%20191828_2.png)
+![Load Balancer Output]:https://github.com/DibyaRanjanParida-03/lb-router-project/blob/main/Screenshot%202026-10-04%20190821.png
 
 
 ## Project Conclusion
